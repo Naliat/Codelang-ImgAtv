@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .photo-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .photo-card img {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .input-container {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .input-container input[type="text"] {
+            flex-grow: 1;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .input-container input[type="file"] {
+            margin-left: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: blue;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .gallery-title {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .gallery {
+            margin-top: 10px;
+        }
+
+        .gallery .photo-card:last-child {
+            margin-bottom: 0;
+        }
+        @media (max-width: 500px) {
+            .photo-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .photo-card img {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .input-container {
+                flex-direction: column;
+            }
+
+            .input-container input[type="text"],
+            .input-container input[type="file"] {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lembranças</h1>
+
+        <div class="photo-card">
+            <img id="preview" src="" alt="Foto">
+            <span id="photo-name">Nome da Foto</span>
+        </div>
+
+        <div class="input-container">
+            <input id="name-input" type="text" placeholder="Digite o nome da foto">
+            <input id="photo-input" type="file">
+        </div>
+
+        <button id="add-btn" class="btn">Adicionar</button>
+
+        <h2 class="gallery-title">Galeria de Fotos</h2>
+
+        <div id="gallery" class="gallery">
+        </div>
+    </div>
+
+    <script>
+ 
+        function addPhoto() {
+            var nameInput = document.getElementById("name-input");
+            var photoInput = document.getElementById("photo-input");
+            var gallery = document.getElementById("gallery");
+
+             
+            if (nameInput.value === "") {
+                alert("Por favor, digite o nome da foto.");
+                return;
+            }
+
+             
+            if (photoInput.files.length === 0) {
+                alert("Por favor, selecione uma foto.");
+                return;
+            }
+
+         
+            var photoCard = document.createElement("div");
+            photoCard.className = "photo-card";
+            var img = document.createElement("img");
+            img.src = URL.createObjectURL(photoInput.files[0]);
+            img.alt = "Foto";
+            img.style.width = "80px";
+            img.style.height = "80px";
+            img.style.marginRight = "10px";
+            img.style.borderRadius = "4px";
+            img.style.objectFit = "cover";
+ 
+            var span = document.createElement("span");
+            span.textContent = nameInput.value;
+
+           
+            photoCard.appendChild(img);
+            photoCard.appendChild(span);
+            gallery.appendChild(photoCard);
+            nameInput.value = "";
+            photoInput.value = "";
+            document.getElementById("preview").src = "";
+            document.getElementById("photo-name").textContent = "Nome da Foto";
+        }
+        function previewPhoto() {
+            var photoInput = document.getElementById("photo-input");
+            var preview = document.getElementById("preview");
+            var photoName = document.getElementById("photo-name");
+
+            if (photoInput.files.length > 0) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(photoInput.files[0]);
+                photoName.textContent = photoInput.files[0].name;
+            } else {
+                preview.src = "";
+                photoName.textContent = "Nome da Foto";
+            }
+        }
+        document.getElementById("add-btn").addEventListener("click", addPhoto);
+        document.getElementById("photo-input").addEventListener("change", previewPhoto);
+    </script>
+</body>
+
+</html>
